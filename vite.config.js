@@ -7,4 +7,12 @@ export default defineConfig({
       include: ['crypto', 'buffer', 'stream', 'util', 'events'],
     }),
   ],
+  build: {
+    rollupOptions: {
+      external: ['@0glabs/0g-ts-sdk', 'ethers'],
+    },
+  },
+  optimizeDeps: {
+    exclude: ['@0glabs/0g-ts-sdk'],
+  },
 });
