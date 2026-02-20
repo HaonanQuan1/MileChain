@@ -98,5 +98,7 @@ WHEN MISSING INFO — return ONLY valid JSON:
 }
 
 Today is ${today}.
-${webContext ? `\n${webContext}` : 'Use training knowledge for transfer partners.'}`;
+${webContext ? `\n${webContext}` : 'Use training knowledge for transfer partners.'}
+
+CRITICAL: Respond with ONLY a raw JSON object. No explanation, no markdown, no \`\`\`json\`\`\` blocks. Start with { and end with }.`;
 }
