@@ -147,6 +147,7 @@ window.sendMessage = async () => {
     conversationHistory.push({ role: 'assistant', content: replyMsg });
 
     await searchAndDisplay(parsed);
+    conversationHistory = [];
 
   } catch (err) {
     removeTyping(typingId);
