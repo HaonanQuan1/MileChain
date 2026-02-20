@@ -6,8 +6,8 @@ import { searchWeb, detectPrograms } from '../search/serper.js';
 
 export async function parseIntent(userText, conversationHistory, onStatus) {
   const today = new Date().toISOString().split('T')[0];
-  const providerUrl = localStorage.getItem('milechain_0g_provider_url') || 'https://compute-network-6.integratenetwork.work';
-  const apiKey = localStorage.getItem('milechain_0g_api_key') || 'app-sk-eyJhZGRyZXNzIjoiMHg1MWQ1ZEM1NzNFNTA3MjU2ZTdDMjVkODFiYzIwMTgyQThiQjY4NjkzIiwicHJvdmlkZXIiOiIweGE0OGYwMTI4NzIzMzUwOUZENjk0YTIyQmY4NDAyMjUwNjJFNjc4MzYiLCJ0aW1lc3RhbXAiOjE3NzE2MjE4MjA3NjYsImV4cGlyZXNBdCI6MTc3NDIxMzgyMDc2Niwibm9uY2UiOiIxNzcxNjIxODIwNzY2LTh2d2Fhc3VqODZwMDAwMDAwMCIsImdlbmVyYXRpb24iOjAsInRva2VuSWQiOjF9fDB4ZWQxYjNjYThkNDcxMjc4ODE5ZmJhM2MxZDY3N2NjN2NkOWI2OGRkOTM1ZTYwYWYzZjliZDJiMmNmNjNhMDRhOTAwZWM2ZGIzZDQ1MmZjMGYwNDcwNGE1ZjRmODIzNjkxODAxYTE5NTBmMzJmYWQ5ODZhYzQ2YjMyMTViMmIzZGUxYg==';
+  const providerUrl = localStorage.getItem('milechain_0g_provider_url') || import.meta.env.VITE_0G_PROVIDER_URL || '';
+  const apiKey = localStorage.getItem('milechain_0g_api_key') || import.meta.env.VITE_0G_API_KEY || '';
 
   if (!providerUrl || !apiKey) {
     throw new Error('0G Compute not configured. Add provider URL and API key in settings.');
