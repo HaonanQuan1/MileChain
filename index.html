@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MileChain — Decentralized Award Flight Search</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Mono:ital,wght@0,300;0,400;1,300&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./styles/main.css" />
+</head>
+<body>
+
+<!-- API Key Modal -->
+<div class="modal-overlay" id="apiModal">
+  <div class="modal">
+    <div class="modal-title">Configure API Keys</div>
+    <div class="modal-sub">
+      Keys are stored locally in your browser only.<br>
+      0G Compute: <a href="https://docs.0g.ai" target="_blank">docs.0g.ai</a> · Claude fallback: <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a>
+    </div>
+
+    <label style="color:var(--accent)">0G COMPUTE PROVIDER URL <span style="color:var(--text-dim)">(required — primary AI)</span></label>
+    <input type="text" id="zeroGProviderInput" placeholder="https://..." />
+
+    <label style="margin-top:4px">0G COMPUTE API KEY <span style="color:var(--text-dim)">(required)</span></label>
+    <input type="password" id="zeroGApiKeyInput" placeholder="app-sk-..." />
+
+    <label style="margin-top:16px">CLAUDE API KEY <span style="color:var(--text-dim)">(optional fallback)</span></label>
+    <input type="password" id="claudeKeyInput" placeholder="sk-ant-..." />
+
+    <label style="margin-top:4px">SERPER API KEY <span style="color:var(--text-dim)">(optional — live transfer partner search)</span></label>
+    <input type="password" id="serperKeyInput" placeholder="Get free key at serper.dev" />
+
+    <label style="margin-top:4px">SEATS.AERO API KEY <span style="color:var(--text-dim)">(optional — live flight data)</span></label>
+    <input type="password" id="seatsKeyInput" placeholder="Coming soon..." />
+
+    <label style="margin-top:16px">0G STORAGE PRIVATE KEY <span style="color:var(--text-dim)">(optional — saves search history on-chain)</span></label>
+    <input type="password" id="zeroGPrivateKeyInput" placeholder="0x... (testnet: faucet.0g.ai)" />
+
+    <button class="modal-btn" onclick="saveKeys()">Launch MileChain →</button>
+    <div class="modal-note">Keys never leave your browser · <a href="https://serper.dev" target="_blank" style="color:var(--accent)">serper.dev</a> · <a href="https://docs.0g.ai" target="_blank" style="color:var(--accent)">docs.0g.ai</a></div>
+  </div>
+</div>
+
+<!-- Header -->
+<header>
+  <div>
+    <div class="logo">Mile<span>Chain</span></div>
+    <div class="logo-tag">Decentralized Award Flight Intelligence</div>
+  </div>
+  <div class="api-badge" id="statusBadge" onclick="document.getElementById('apiModal').style.display='flex'">
+    <span>●</span> MOCK DATA
+  </div>
+</header>
+
+<!-- Main -->
+<main>
+  <!-- Left Panel -->
+  <div class="left-panel">
+
+    <!-- Search Form -->
+    <div class="search-section">
+      <div class="section-label">Manual Search</div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>From</label>
+          <input type="text" id="origin" placeholder="JFK, NYC..." />
+        </div>
+        <div class="form-group">
+          <label>To</label>
+          <input type="text" id="destination" placeholder="NRT, TYO..." />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Depart</label>
+          <input type="date" id="departDate" />
+        </div>
+        <div class="form-group">
+          <label>Return</label>
+          <input type="date" id="returnDate" />
+        </div>
+      </div>
+
+      <div class="form-group" style="margin-bottom:14px">
+        <label>Cabin Class</label>
+        <div class="cabin-grid">
+          <button class="cabin-btn" onclick="selectCabin(this,'economy')">ECON</button>
+          <button class="cabin-btn" onclick="selectCabin(this,'premium')">PREM</button>
+          <button class="cabin-btn active" onclick="selectCabin(this,'business')">BIZ</button>
+          <button class="cabin-btn" onclick="selectCabin(this,'first')">FIRST</button>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label>Program</label>
+          <select id="program">
+            <option value="all">All Programs</option>
+            <option value="amex">Amex Membership Rewards</option>
+            <option value="chase">Chase Ultimate Rewards</option>
+            <option value="citi">Citi ThankYou</option>
+            <option value="capital one">Capital One Miles</option>
+            <option value="bilt">Bilt Rewards</option>
+            <option value="united">United MileagePlus</option>
+            <option value="aeroplan">Air Canada Aeroplan</option>
+            <option value="delta">Delta SkyMiles</option>
+            <option value="alaska">Alaska Mileage Plan</option>
+            <option value="aa">AA AAdvantage</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label>Passengers</label>
+          <select id="passengers">
+            <option>1</option><option>2</option><option>3</option><option>4</option>
+          </select>
+        </div>
+      </div>
+
+      <button class="search-btn" onclick="doManualSearch()">SEARCH AWARD FLIGHTS</button>
+    </div>
+
+    <!-- Chat -->
+    <div class="chat-section">
+      <div class="search-section" style="padding-bottom:0; border-bottom:none;">
+        <div class="section-label">AI Assistant</div>
+      </div>
+      <div class="chat-messages" id="chatMessages">
+        <div class="msg assistant">
+          <div class="msg-avatar">AI</div>
+          <div class="msg-bubble">
+            <p>Hey! I'm your award flight assistant. Tell me where you want to go and which points you have — I'll find the best redemptions and make sure the transfer partners actually work.</p>
+            <p>Example: <em>"Business class to Tokyo in April, I have Chase UR"</em></p>
+          </div>
+        </div>
+      </div>
+      <div class="chat-input-area">
+        <div class="chat-input-wrap">
+          <textarea class="chat-input" id="chatInput" rows="1"
+            placeholder="Where do you want to fly..."
+            onkeydown="handleKey(event)"
+            oninput="autoResize(this)"></textarea>
+          <button class="send-btn" onclick="sendMessage()">
+            <svg viewBox="0 0 24 24"><path d="M2 21l21-9L2 3v7l15 2-15 2v7z"/></svg>
+          </button>
+        </div>
+        <div class="chat-hints">
+          <button class="hint-chip" onclick="fillHint('Business class NYC to Tokyo next month, I have Amex points')">Amex → Tokyo</button>
+          <button class="hint-chip" onclick="fillHint('First class to London with Chase UR points')">Chase UR → London</button>
+          <button class="hint-chip" onclick="fillHint('Cheapest business to Paris, I have Citi ThankYou points')">Citi → Paris</button>
+          <button class="hint-chip" onclick="fillHint('Best way to fly business to Tokyo with United miles')">United → Tokyo</button>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right Panel -->
+  <div class="right-panel">
+    <div class="results-header">
+      <div class="results-meta" id="resultsMeta">Waiting for search...</div>
+      <div class="filter-row" id="filterRow" style="display:none">
+        <button class="filter-chip active" onclick="filterResults('all',this)">ALL</button>
+        <button class="filter-chip" onclick="filterResults('nonstop',this)">NONSTOP</button>
+        <button class="filter-chip" onclick="filterResults('best',this)">BEST VALUE</button>
+      </div>
+    </div>
+    <div class="results-body" id="resultsBody">
+      <div class="empty-state">
+        <div class="empty-icon">✈️</div>
+        <div class="empty-title">Ready to search</div>
+        <div class="empty-sub">Use the form or chat with the AI assistant to find award flights.</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>

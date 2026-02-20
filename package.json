@@ -1,0 +1,19 @@
+{
+  "name": "milechain",
+  "version": "1.0.0",
+  "description": "AI-powered award flight search with decentralized AI inference on 0G Compute",
+  "type": "module",
+  "scripts": {
+    "dev": "npx vite",
+    "build": "npx vite build",
+    "preview": "npx vite preview"
+  },
+  "devDependencies": {
+    "vite": "^5.0.0"
+  },
+  "dependencies": {
+    "@0glabs/0g-ts-sdk": "^0.3.3",
+    "ethers": "^6.13.1",
+    "vite-plugin-node-polyfills": "^0.25.0"
+  }
+}
