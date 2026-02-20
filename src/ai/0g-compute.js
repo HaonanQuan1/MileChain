@@ -6,8 +6,8 @@ import { searchWeb, detectPrograms } from '../search/serper.js';
 
 export async function parseIntent(userText, conversationHistory, onStatus) {
   const today = new Date().toISOString().split('T')[0];
-  const providerUrl = localStorage.getItem('milechain_0g_provider_url') || '';
-  const apiKey = localStorage.getItem('milechain_0g_api_key') || '';
+  const providerUrl = localStorage.getItem('milechain_0g_provider_url') || import.meta.env.VITE_0G_PROVIDER_URL || '';
+  const apiKey = localStorage.getItem('milechain_0g_api_key') || import.meta.env.VITE_0G_API_KEY || '';
 
   if (!providerUrl || !apiKey) {
     throw new Error('0G Compute not configured. Add provider URL and API key in settings.');
