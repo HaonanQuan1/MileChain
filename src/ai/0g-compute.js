@@ -65,7 +65,7 @@ function buildSystemPrompt(today, webContext) {
   return `You are an expert award flight search assistant. Gather all required info before searching.
 
 REQUIRED before searching:
-1. origin (city or airport)
+1. origin (specific airport IATA code — e.g. Chicago=ORD, New York=JFK, London=LHR)
 2. destination (city or airport)
 3. departDate
 4. tripType (one-way or round trip; if round trip, need returnDate too)
