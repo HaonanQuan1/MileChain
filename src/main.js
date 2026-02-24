@@ -8,8 +8,8 @@ import { getMockResults } from './search/mock.js';
 import { saveSearch, getLocalHistory } from './storage/0g-storage.js';
 
 // ── AI backend — 0G Compute (default), Claude (fallback)
-import { parseIntent } from './ai/0g-compute.js';
-// import { parseIntent } from './ai/claude.js'; // ← uncomment to use Claude instead
+// import { parseIntent } from './ai/0g-compute.js';
+import { parseIntent } from './ai/claude.js'; // ← uncomment to use Claude instead
 
 // ── STATE ──
 let conversationHistory = [];

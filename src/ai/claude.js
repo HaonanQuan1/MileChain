@@ -5,7 +5,7 @@ import { searchWeb, detectPrograms } from '../search/serper.js';
 
 export async function parseIntent(userText, conversationHistory, onStatus) {
   const today = new Date().toISOString().split('T')[0];
-  const apiKey = localStorage.getItem('milechain_claude_key') || '';
+  const apiKey = localStorage.getItem('milechain_claude_key') || import.meta.env.VITE_CLAUDE_API_KEY || '';
 
   // Detect programs from current message + history
   const historyText = conversationHistory.map(m => m.content).join(' ');
@@ -93,5 +93,6 @@ WHEN MISSING INFO — return ONLY this JSON:
 }
 
 Today is ${today}.
-${webContext ? `\n${webContext}` : 'No live web data — use training knowledge for transfer partners.'}`;
+${webContext ? `\n${webContext}` : 'No live web data — use training knowledge for transfer partners.'}
+CRITICAL: Respond with ONLY a raw JSON object. No explanation, no markdown, no \`\`\`json\`\`\` blocks. Start with { and end with }.`;
 }
